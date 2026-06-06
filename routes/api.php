@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MusiqueController;
+use App\Http\Controllers\PlaylistController;
 
 // --- Routes publiques
 
@@ -21,3 +22,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::get('/playlists', [PlaylistController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/playlists', [PlaylistController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/playlists/{playlist}/musiques', [PlaylistController::class, 'ajouterMusique'])->middleware('auth:sanctum');
+
+Route::post('/musiques/{musique}/acheter', [MusiqueController::class, 'acheter'])->middleware('auth:sanctum');;
