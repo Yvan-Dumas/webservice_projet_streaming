@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('playlists', function (Blueprint $table) {
             $table->id();
             $table->string('nom_playlist', 50);
-            $table->integer('nb_titres');
+            $table->integer('nb_titres')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
