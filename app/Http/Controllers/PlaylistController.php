@@ -62,6 +62,29 @@ class PlaylistController extends Controller
         ], 201);
     }
 
+    public function update(Request $request, Playlist $playlist)
+{
+    // Vérifie que la playlist appartient à l'utilisateur
+    if ($playlist->user_id !== $request->user()->id) {
+        return response()->json(['message' => 'Action non autorisée.'], 403);
+    }
+
+    // Validation du nouveau nom
+    $request->validate([
+        'nom_playlist' => 'required|max:255',
+    ]);
+
+    // Mise à jour
+    $playlist->update([
+        'nom_playlist' => $request->nom_playlist
+    ]);
+
+    return response()->json([
+        'message' => 'Playlist renommée avec succès !',
+        'playlist' => $playlist
+    ]);
+}
+
     public function destroy(Request $request, Playlist $playlist)
     {
         // On vérifie que la playlist appartient bien à l'utilisateur connecté

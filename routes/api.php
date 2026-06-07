@@ -28,6 +28,7 @@ Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 Route::get('/playlists', [PlaylistController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/playlists/{playlist}', [PlaylistController::class, 'show'])->middleware('auth:sanctum');
 Route::post('/playlists', [PlaylistController::class, 'store'])->middleware('auth:sanctum');
+Route::put('/playlists/{playlist}', [PlaylistController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy'])->middleware('auth:sanctum');
 Route::post('/playlists/{playlist}/musiques', [PlaylistController::class, 'ajouterMusique'])->middleware('auth:sanctum');
 Route::delete('/playlists/{playlist}/musiques/{musique}', [PlaylistController::class, 'retirerMusique'])->middleware('auth:sanctum');
