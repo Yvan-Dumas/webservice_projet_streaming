@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MusiqueController;
 use App\Http\Controllers\PlaylistController;
+use App\Http\Controllers\UserController;
 
 // --- Routes publiques
 
@@ -31,4 +32,6 @@ Route::delete('/playlists/{playlist}', [PlaylistController::class, 'destroy'])->
 Route::post('/playlists/{playlist}/musiques', [PlaylistController::class, 'ajouterMusique'])->middleware('auth:sanctum');
 Route::delete('/playlists/{playlist}/musiques/{musique}', [PlaylistController::class, 'retirerMusique'])->middleware('auth:sanctum');
 
-Route::post('/musiques/{musique}/acheter', [MusiqueController::class, 'acheter'])->middleware('auth:sanctum');;
+Route::post('/musiques/{musique}/acheter', [MusiqueController::class, 'acheter'])->middleware('auth:sanctum');
+
+Route::get('/mes-achats', [UserController::class, 'mesAchats'])->middleware('auth:sanctum');
