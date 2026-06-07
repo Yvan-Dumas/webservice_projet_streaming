@@ -48,4 +48,38 @@ class MusiqueController extends Controller
             'musique' => $musique
         ]);
     }
+
+    public function acheter(Request $request, Musique $musique)
+    {
+        $user = $request->user();
+
+        if ($musique->prix == 0) {
+            return response()->json([
+                'message' => 'Cette musique est gratuite, pas besoin de l\'acheter !'
+            ], 400); // 400 Bad Request
+        }
+
+        // Vérifie si l'utilisateur possède déjà cette musique
+        $dejaAchete = $user->musiquesAchetees()
+            ->where('musique_id', $musique->id)
+            ->exists();
+
+        if ($dejaAchete) {
+            return response()->json([
+                'message' => 'Vous possédez déjà cette musique.'
+            ], 400);
+        }
+
+        $user->musiquesAchetees()->attach(
+            $musique->id,
+            [
+                'prix' => $musique->prix,
+                'date_achat' => now()
+            ]
+        );
+
+        return response()->json([
+            'message' => "La musique id:'{$musique->id}' a été achetée avec succès !"
+        ], 201);
+    }
 }
