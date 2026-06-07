@@ -33,6 +33,6 @@ class User extends Authenticatable
 
     public function musiquesAchetees()
     {
-        return $this->belongsToMany(Musique::class);
+        return $this->belongsToMany(Musique::class)->withPivot('prix', 'date_achat');
     }
 }
