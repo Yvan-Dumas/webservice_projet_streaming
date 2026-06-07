@@ -22,6 +22,29 @@ class PlaylistController extends Controller
         ]);
     }
 
+    public function show(Request $request, Playlist $playlist)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Vous devez être connecté pour accéder à cette playlist.'
+            ], 401);
+        }
+
+        if ($playlist->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Action non autorisée. Cette playlist ne vous appartient pas.'
+            ], 403);
+        }
+
+        $playlist->load('musiques.styles');
+
+        return response()->json([
+            'playlist' => $playlist
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -37,6 +60,23 @@ class PlaylistController extends Controller
             'message' => 'Playlist créée avec succès !',
             'playlist' => $playlist
         ], 201);
+    }
+
+    public function destroy(Request $request, Playlist $playlist)
+    {
+        // On vérifie que la playlist appartient bien à l'utilisateur connecté
+        if ($playlist->user_id !== $request->user()->id) {
+            return response()->json([
+                'message' => 'Action non autorisée.'
+            ], 403);
+        }
+
+        $playlist->musiques()->detach();
+        $playlist->delete();
+
+        return response()->json([
+            'message' => 'Playlist supprimée avec succès !'
+        ]);
     }
 
     public function ajouterMusique(Request $request, Playlist $playlist)
@@ -86,6 +126,34 @@ class PlaylistController extends Controller
 
         return response()->json([
             'message' => 'Musique ajoutée à la playlist avec succès !',
+            'playlist' => $playlistLoaded
+        ]);
+    }
+
+    public function retirerMusique(Request $request, Playlist $playlist, Musique $musique)
+    {
+        $user = $request->user();
+
+        // On vérifie que la playlist appartient bien à l'utilisateur connecté
+        if ($playlist->user_id !== $user->id) {
+            return response()->json([
+                'message' => 'Action non autorisée.'
+            ], 403);
+        }
+
+        // Vérifie si la musique est déjà dans la playlist
+        if (!$playlist->musiques()->where('musique_id', $musique->id)->exists()) {
+            return response()->json([
+                'message' => 'Cette musique n\'est pas dans la playlist.'
+            ], 404);
+        }
+
+        $playlist->musiques()->detach($musique->id);
+        $playlist->decrement('nb_titres');
+        $playlistLoaded = Playlist::with('musiques.styles')->find($playlist->id);
+
+        return response()->json([
+            'message' => 'Musique retirée de la playlist avec succès !',
             'playlist' => $playlistLoaded
         ]);
     }
