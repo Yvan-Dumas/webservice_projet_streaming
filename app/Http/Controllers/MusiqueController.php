@@ -7,7 +7,8 @@ use App\Models\Musique;
 
 class MusiqueController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $user = $request->user('sanctum');
 
         if ($user) {
@@ -20,6 +21,31 @@ class MusiqueController extends Controller
 
         return response()->json([
             'musiques' => $musiques,
+        ]);
+    }
+
+    public function show(Request $request, Musique $musique)
+    {
+        // Si la musique n'existe pas
+        if (!$musique) {
+            return response()->json([
+                'message' => 'Musique introuvable.'
+            ], 404);
+        }
+
+        if ($musique->prix > 0) {
+            // musique payante, on vérifie que l'user est connecté
+            $user = $request->user('sanctum');
+
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Vous devez être connecté pour accéder à cette musique payante.'
+                ], 401);
+            }
+        }
+
+        return response()->json([
+            'musique' => $musique
         ]);
     }
 }
