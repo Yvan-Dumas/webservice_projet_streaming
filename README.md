@@ -17,10 +17,10 @@ Les routes privées nécessitent l'envoi du token généré lors du login ou du 
 
 #### 🔹 Authentification
 * **`POST /api/register`** | Crée un compte.
-  * **Body :** `{ "name": "...", "email": "...", "password": "..." }`
+  * **Body :** `[ "name": "...", "email": "...", "password": "..." ]`
   * **Retourne :** `access_token`, `token_type`, `user`
 * **`POST /api/login`** | Connecte un utilisateur.
-  * **Body :** `{ "email": "...", "password": "..." }`
+  * **Body :** `[ "email": "...", "password": "..." ]`
   * **Retourne :** `access_token`, `token_type`, `user`
 
 #### 🔹 Catalogue Musiques
@@ -40,13 +40,13 @@ Les routes privées nécessitent l'envoi du token généré lors du login ou du 
 * **`GET /api/playlists`** | Liste les playlists de l'utilisateur.
 * **`GET /api/playlists/{id}`** | Détails d'une playlist (bloqué si elle ne vous appartient pas).
 * **`POST /api/playlists`** | Crée une playlist.
-  * **Body :** `{ "nom_playlist": "..." }`
+  * **Body :** `[ "nom_playlist": "..." ]`
 * **`PUT /api/playlists/{id}`** | Renomme une playlist.
-  * **Body :** `{ "nom_playlist": "..." }`
+  * **Body :** `[ "nom_playlist": "..." ]`
 * **`DELETE /api/playlists/{id}`** | Supprime une playlist (nettoie automatiquement les musiques associées).
 
 #### 🔹 Contenu des Playlists & Magasin
 * **`POST /api/playlists/{id}/musiques`** | Ajoute une musique à une playlist (vérifie l'achat si payante, évite les doublons).
-  * **Body :** `{ "musique_id": ... }`
+  * **Body :** `[ "musique_id": ... ]`
 * **`DELETE /api/playlists/{playlist_id}/musiques/{musique_id}`** | Retire une musique d'une playlist.
 * **`POST /api/musiques/{id}/acheter`** | Achète une musique payante (ajoute le prix et la date du jour dans la table pivot).
